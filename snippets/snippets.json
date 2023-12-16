@@ -1,0 +1,9 @@
+{
+	"colorful text":{
+		"prefix":"colorful",
+		"body":[
+			"|$1:$2|"
+		],
+		"description":"colorful text"
+	}
+}

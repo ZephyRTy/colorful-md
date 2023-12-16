@@ -1,0 +1,84 @@
+{
+  "name": "colorful-md",
+  "displayName": "colorful-md",
+  "description": "",
+  "version": "0.0.1",
+  "publisher": "ZephyrTy",
+  "engines": {
+    "vscode": "^1.54.0"
+  },
+  "categories": [
+	"Programming Languages",
+	"Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "markdown.markdownItPlugins": true,
+	"markdown.previewStyles": [
+		"./out/style.css"
+	],
+	"snippets": [
+		{
+			"language": "markdown",
+			"path": "./snippets/snippets.json"
+		}
+	],
+	"colors": [
+		{
+			"id": "colorfulMarkdown.highlightColor",
+			"description": "highlight of color-text syntax",
+			"defaults": {
+				"dark": "#01d6fc",
+				"light": "#0096d1",
+				"highContrast": "#01d6fc"
+			}
+		}
+	],
+	"configuration": {
+		"title": "colorful markdown",
+		"properties": {
+			"colorful-markdown.fontColorMap": {
+				"type": "object",
+				"properties": {
+					"color": {
+						"type": "string",
+						"default": "",
+						"description": "字体颜色"
+					},
+					"desc": {
+						"type": ["string", "null"],
+						"default": "",
+						"description": "描述"
+					}
+				},
+				"default": {},
+				"description": "字体颜色配置"
+			}
+		}
+	}
+  },
+  "scripts": {
+    "vscode:prepublish": "yarn run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "yarn run compile && yarn run lint",
+    "lint": "eslint src --ext ts",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^13.0.7",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "18.x",
+    "@types/vscode": "^1.54.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.1",
+    "@typescript-eslint/parser": "^6.13.1",
+    "@vscode/test-cli": "^0.0.4",
+    "@vscode/test-electron": "^2.3.8",
+    "eslint": "^8.54.0",
+    "typescript": "^5.3.2"
+  },
+  "dependencies": {
+    "markdown-it": "^14.0.0"
+  }
+}
