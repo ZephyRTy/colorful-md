@@ -20,31 +20,9 @@ export interface ColorDecorationWithStyle {
 	normal: ColorDecoration
 }
 
-export const generateDecoration = (color: string, style?: object) => {
+export const generateDecoration = (color: string, style: object = {}) => {
 	return vscode.window.createTextEditorDecorationType({
 		color,
 		...style
 	});
-}
-export const initDecoration = (decoration: ColorDecorationWithStyle, color: string) => {
-
-	decoration.bold = {
-		decorator: generateDecoration(color, { fontWeight: 'bold' }),
-		decorationList: []
-	}
-
-	decoration.italic = {
-		decorator: generateDecoration(color, { fontStyle: 'italic' }),
-		decorationList: []
-	}
-
-	decoration.boldItalic = {
-		decorator: generateDecoration(color, { fontWeight: 'bold', fontStyle: 'italic' }),
-		decorationList: []
-	}
-
-	decoration.normal = {
-		decorator: generateDecoration(color),
-		decorationList: []
-	}
 }

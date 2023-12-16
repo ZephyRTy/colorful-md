@@ -1,11 +1,5 @@
 import * as vscode from 'vscode';
-import { ColorConfig, colorSyntaxRegExp } from '../util';
-
-const generateDecoration = (color: string) => {
-	return vscode.window.createTextEditorDecorationType({
-		color
-	});
-}
+import { ColorConfig, ColorDecorationWithStyle, colorSyntaxRegExp, generateDecoration } from '../util';
 
 const isSame = (a: ColorConfig, b: ColorConfig) => {
 	const aKey = Object.keys(a).join(',');
@@ -25,11 +19,27 @@ export const highlight = (context: vscode.ExtensionContext) => {
 	let activeEditor = vscode.window.activeTextEditor;
 
 	let configMap = vscode.workspace.getConfiguration().get('colorful-markdown.fontColorMap') as ColorConfig;
-	let decoratorMap = {} as {[key: string]: {decorator: vscode.TextEditorDecorationType, decorationList: vscode.DecorationOptions[]}};
+	let decoratorMap = {} as {[key: string]: ColorDecorationWithStyle};
 	Object.keys(configMap).forEach(e => {
 		decoratorMap[e] = {
-			decorator: generateDecoration(configMap[e].color),
-			decorationList: []
+			bold: {
+				decorator: generateDecoration(configMap[e].color, { fontWeight: 'bold' }),
+				decorationList: []
+			},
+
+			italic: {
+				decorator: generateDecoration(configMap[e].color, { fontStyle: 'italic' }),
+				decorationList: []
+			},
+			boldItalic: {
+				decorator: generateDecoration(configMap[e].color, { fontWeight: 'bold', fontStyle: 'italic'}),
+				decorationList: []
+			},
+			normal: {
+				decorator: generateDecoration(configMap[e].color),
+				decorationList: []
+			},
+
 		}
 	})
 	function updateDecorations() {
@@ -38,16 +48,27 @@ export const highlight = (context: vscode.ExtensionContext) => {
 		}
 		const curConfigMap = vscode.workspace.getConfiguration().get('colorful-markdown.fontColorMap') as ColorConfig;
 		if (!isSame(curConfigMap, configMap)) {
-			console.log('update config');
 			configMap = curConfigMap;
-			// Object.keys(configMap).forEach(e => {
-			// 	decoratorMap[e].decorator.dispose();
-			// })
 			decoratorMap = {};
 			Object.keys(configMap).forEach(e => {
 				decoratorMap[e] = {
-					decorator: generateDecoration(configMap[e].color),
-					decorationList: []
+					bold: {
+						decorator: generateDecoration(configMap[e].color, { fontWeight: 'bold' }),
+						decorationList: []
+					},
+					italic: {
+						decorator: generateDecoration(configMap[e].color, { fontStyle: 'italic' }),
+						decorationList: []
+					},
+					boldItalic: {
+						decorator: generateDecoration(configMap[e].color, { fontWeight: 'bold', fontStyle: 'italic'}),
+						decorationList: []
+					},
+					normal: {
+						decorator: generateDecoration(configMap[e].color),
+						decorationList: []
+					},
+		
 				}
 			})
 		}
@@ -59,11 +80,17 @@ export const highlight = (context: vscode.ExtensionContext) => {
 			const endPos = activeEditor.document.positionAt(match.index + match[0].length);
 			const colorName = match[2];
 			const decoration = { range: new vscode.Range(startPos, endPos), hoverMessage: match[3] || '' };
-			decoratorMap[colorName]?.decorationList.push(decoration);
+			const styleArr = ['normal', 'italic', 'bold', 'boldItalic'];
+			const style = styleArr[match[1]?.length || 0] as keyof ColorDecorationWithStyle;
+			decoratorMap[colorName]?.[style].decorationList.push(decoration);
 		}
 		Object.keys(decoratorMap).forEach(e => {
-			activeEditor!.setDecorations(decoratorMap[e].decorator, decoratorMap[e].decorationList);
-			decoratorMap[e].decorationList = [];
+			for (const i in decoratorMap[e]) {
+				const key = i as keyof ColorDecorationWithStyle
+				const ele = decoratorMap[e][key]
+				activeEditor!.setDecorations(ele.decorator, ele.decorationList);
+				decoratorMap[e][key].decorationList = [];
+			}
 		})
 	}
 

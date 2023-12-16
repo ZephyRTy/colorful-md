@@ -1,9 +1,13 @@
 {
   "name": "colorful-md",
   "displayName": "colorful-md",
-  "description": "",
-  "version": "0.0.1",
+  "description": "为字体增加颜色的markdown插件",
+  "version": "1.0.0",
   "publisher": "ZephyrTy",
+  "license": "MIT",
+  "repository": {
+	"url": "https://github.com/ZephyRTy/colorful-md"
+  },
   "engines": {
     "vscode": "^1.54.0"
   },
