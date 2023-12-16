@@ -15,7 +15,7 @@
 	"Programming Languages",
 	"Other"
   ],
-  "activationEvents": [],
+  "activationEvents": ["onLanguage:markdown"],
   "main": "./out/extension.js",
   "contributes": {
     "markdown.markdownItPlugins": true,
@@ -28,17 +28,16 @@
 			"path": "./snippets/snippets.json"
 		}
 	],
-	"colors": [
-		{
-			"id": "colorfulMarkdown.highlightColor",
-			"description": "highlight of color-text syntax",
-			"defaults": {
-				"dark": "#01d6fc",
-				"light": "#0096d1",
-				"highContrast": "#01d6fc"
+	"menus": {
+		"editor/title": [
+			{
+			  "when": "resourceLangId == markdown",
+			  "alt": "markdown.showPreview",
+			  "command": "markdown.showPreviewToSide",
+			  "group": "navigation"
 			}
-		}
-	],
+		]
+	},
 	"configuration": {
 		"title": "colorful markdown",
 		"properties": {
