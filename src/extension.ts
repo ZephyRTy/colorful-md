@@ -10,7 +10,7 @@ import { highlight } from './plugin/highlight';
 // Your extension is activated the very first time the command is executed
 const LANGUAGES = ['markdown', 'md', 'mdx'];
 export function activate(context: vscode.ExtensionContext) {
-	const triggers = ['|', '|.', '|..', '|...'];
+	const triggers = ['{'];
 	const completionProvider = vscode.languages.registerCompletionItemProvider(LANGUAGES, {
 		async provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext) {
 			const fontColorMap = vscode.workspace.getConfiguration().get('colorful-markdown.fontColorMap') as ColorConfig;

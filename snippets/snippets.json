@@ -1,9 +1,30 @@
 {
-	"colorful text":{
-		"prefix":"colorful",
+	"normal color":{
+		"prefix":"color",
 		"body":[
-			"|$1:$2|"
+			"{$1 $2}"
 		],
-		"description":"colorful text"
+		"description":"normal color text"
+	},
+	"color and italic":{
+		"prefix":"|",
+		"body":[
+			"{$1|$2}"
+		],
+		"description":"color and bold text"
+	},
+	"color and bold":{
+		"prefix":"|-",
+		"body":[
+			"{$1|-$2}"
+		],
+		"description":"color and italic text"
+	},
+	"color and boldItalic":{
+		"prefix":"|=",
+		"body":[
+			"{$1|=$2}"
+		],
+		"description":"color and boldItalic text"
 	}
 }

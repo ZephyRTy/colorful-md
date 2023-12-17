@@ -57,6 +57,29 @@
 				},
 				"default": {},
 				"description": "字体颜色配置"
+			},
+			"colorful-markdown.fontColor": {
+				"type": "array",
+				"items": [
+					{
+						"type": "object",
+						"properties": {
+							"color": {
+								"type": "string",
+								"default": "",
+								"description": "字体颜色"
+							},
+							"desc": {
+								"type": ["string", "null"],
+								"default": "",
+								"description": "描述"
+							}
+						},
+						"description": "字体颜色"
+					}
+				],
+				"default": [],
+				"description": "字体颜色配置"
 			}
 		}
 	}

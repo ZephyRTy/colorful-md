@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-export const colorSyntaxRegExp = /\|(\.{0,3})([a-zA-Z]+):(.*?)\|/g;
+export const colorSyntaxRegExp = /{([a-zA-Z0-9]+)( |\|[-=]?)(.*?)}/g;
 export interface ConfigItem {
 	color: string;
 	desc?: string;

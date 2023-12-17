@@ -78,10 +78,23 @@ export const highlight = (context: vscode.ExtensionContext) => {
 		while ((match = colorSyntaxRegExp.exec(text))) {
 			const startPos = activeEditor.document.positionAt(match.index);
 			const endPos = activeEditor.document.positionAt(match.index + match[0].length);
-			const colorName = match[2];
+			const styleVar = match[2];
+			const colorName = match[1];
 			const decoration = { range: new vscode.Range(startPos, endPos), hoverMessage: match[3] || '' };
-			const styleArr = ['normal', 'italic', 'bold', 'boldItalic'];
-			const style = styleArr[match[1]?.length || 0] as keyof ColorDecorationWithStyle;
+			let style = 'normal' as keyof ColorDecorationWithStyle;
+			switch (styleVar) {
+				case '|':
+					style = 'italic';
+					break;
+				case '|-':
+					style = 'bold';
+					break;
+				case '|=':
+					style = 'boldItalic';
+					break;
+				default:
+					style = 'normal';
+			}
 			decoratorMap[colorName]?.[style].decorationList.push(decoration);
 		}
 		Object.keys(decoratorMap).forEach(e => {
