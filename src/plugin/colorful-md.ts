@@ -1,16 +1,6 @@
 import type MarkdownIt from "markdown-it/lib"
-import StateCore from 'markdown-it/lib/rules_core/state_core';
 import * as vscode from 'vscode';
-import { ColorConfig, ConfigItem, colorSyntaxRegExp } from "../util";
-function exampleRule(state: StateCore): boolean {
-	for (const token of state.tokens) {
-	  if (token.type === "paragraph_open") {
-		console.log('token');
-		token.attrJoin("style", "color:blue;")
-	  }
-	}
-	return true
-}
+import { ColorConfig, colorSyntaxRegExp } from "../util";
 
 export const mdPlugin = (md: MarkdownIt) => {
 	md.renderer.rules.text = function(tokens, idx, options, env, self) {

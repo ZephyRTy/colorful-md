@@ -3,28 +3,40 @@
 import * as vscode from 'vscode';
 import { mdPlugin } from './plugin/colorful-md';
 import MarkdownIt from 'markdown-it/lib';
-import { ColorConfig, ConfigItem } from './util';
+import { ColorConfig, initDictionary, wordDictionary } from './util';
 import { highlight } from './plugin/highlight';
+import { commandDispose } from './plugin/changeColorTag';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 const LANGUAGES = ['markdown', 'md', 'mdx'];
 export function activate(context: vscode.ExtensionContext) {
 	const triggers = ['{'];
+	initDictionary();
 	const completionProvider = vscode.languages.registerCompletionItemProvider(LANGUAGES, {
 		async provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext) {
 			const fontColorMap = vscode.workspace.getConfiguration().get('colorful-markdown.fontColorMap') as ColorConfig;
-			const range = new vscode.Range(new vscode.Position(position.line, 0), position);
-			const text = document.getText(range);
 			const completionItemList: vscode.CompletionItem[] = Object.keys(fontColorMap).map(e=>({
 				label: e,
 				detail: fontColorMap[e].desc
 			}))
-			return completionItemList;
+			const wordItemSet: Set<string> = new Set();
+			for (let i of [...wordDictionary.values()]) {
+				for (let j of [...i]) {
+					wordItemSet.add(j);
+				}
+			}
+			const wordItemList: vscode.CompletionItem[] = []
+			wordItemSet.forEach(e=>{
+				wordItemList.push({
+					label: e
+				})
+			})
+			return [...completionItemList, ...wordItemList];
 		}
 	}, ...triggers);
-
 	context.subscriptions.push(completionProvider);
+	context.subscriptions.push(commandDispose);
 	highlight(context);
 
 	return {

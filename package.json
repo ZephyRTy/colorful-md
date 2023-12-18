@@ -3,86 +3,107 @@
   "displayName": "colorful-md",
   "description": "为字体增加颜色的markdown插件",
   "version": "1.0.0",
-  "publisher": "ZephyrTy",
+  "publisher": "ZephyRTy",
   "license": "MIT",
   "repository": {
-	"url": "https://github.com/ZephyRTy/colorful-md"
+    "url": "git+https://github.com/ZephyRTy/colorful-md.git"
   },
   "engines": {
     "vscode": "^1.54.0"
   },
   "categories": [
-	"Programming Languages",
-	"Other"
+    "Programming Languages",
+    "Other"
   ],
-  "activationEvents": ["onLanguage:markdown"],
+  "activationEvents": [
+    "onLanguage:markdown"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "markdown.markdownItPlugins": true,
-	"markdown.previewStyles": [
-		"./out/style.css"
-	],
-	"snippets": [
+    "markdown.previewStyles": [
+      "./out/style.css"
+    ],
+	"commands": [
 		{
-			"language": "markdown",
-			"path": "./snippets/snippets.json"
+			"command": "colorful-markdown.changeColorTag",
+			"title": "修改颜色标签",
+			"enablement": "editorLangId == markdown && editorTextFocus"
 		}
 	],
-	"menus": {
-		"editor/title": [
-			{
-			  "when": "resourceLangId == markdown",
-			  "alt": "markdown.showPreview",
-			  "command": "markdown.showPreviewToSide",
-			  "group": "navigation"
-			}
-		]
-	},
-	"configuration": {
-		"title": "colorful markdown",
-		"properties": {
-			"colorful-markdown.fontColorMap": {
-				"type": "object",
-				"properties": {
-					"color": {
-						"type": "string",
-						"default": "",
-						"description": "字体颜色"
-					},
-					"desc": {
-						"type": ["string", "null"],
-						"default": "",
-						"description": "描述"
-					}
-				},
-				"default": {},
-				"description": "字体颜色配置"
-			},
-			"colorful-markdown.fontColor": {
-				"type": "array",
-				"items": [
-					{
-						"type": "object",
-						"properties": {
-							"color": {
-								"type": "string",
-								"default": "",
-								"description": "字体颜色"
-							},
-							"desc": {
-								"type": ["string", "null"],
-								"default": "",
-								"description": "描述"
-							}
-						},
-						"description": "字体颜色"
-					}
-				],
-				"default": [],
-				"description": "字体颜色配置"
-			}
+    "snippets": [
+      {
+        "language": "markdown",
+        "path": "./snippets/snippets.json"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "when": "resourceLangId == markdown",
+          "alt": "markdown.showPreview",
+          "command": "markdown.showPreviewToSide",
+          "group": "navigation"
+        }
+      ],
+	  "editor/context": [
+		{
+			"command": "colorful-markdown.changeColorTag",
+			"group": "colorful-markdown"
 		}
-	}
+	  ]
+    },
+    "configuration": {
+      "title": "colorful markdown",
+      "properties": {
+        "colorful-markdown.fontColorMap": {
+          "type": "object",
+          "properties": {
+            "color": {
+              "type": "string",
+              "default": "",
+              "description": "字体颜色"
+            },
+            "desc": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": "",
+              "description": "描述"
+            }
+          },
+          "default": {},
+          "description": "字体颜色配置"
+        },
+        "colorful-markdown.fontColor": {
+          "type": "array",
+          "items": [
+            {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "default": "",
+                  "description": "字体颜色"
+                },
+                "desc": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "default": "",
+                  "description": "描述"
+                }
+              },
+              "description": "字体颜色"
+            }
+          ],
+          "default": [],
+          "description": "字体颜色配置"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "yarn run compile",
@@ -106,5 +127,10 @@
   },
   "dependencies": {
     "markdown-it": "^14.0.0"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/ZephyRTy/colorful-md/issues"
+  },
+  "homepage": "https://github.com/ZephyRTy/colorful-md#readme",
+  "author": "ZephyRTy"
 }

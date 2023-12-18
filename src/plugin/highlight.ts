@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
-import { ColorConfig, ColorDecorationWithStyle, colorSyntaxRegExp, generateDecoration } from '../util';
+import { ColorConfig, ColorDecorationWithStyle, colorSyntaxRegExp, generateDecoration, wordDictionary } from '../util';
+import { addToDictionary } from './dictionary';
 
 const isSame = (a: ColorConfig, b: ColorConfig) => {
 	const aKey = Object.keys(a).join(',');
@@ -46,6 +47,8 @@ export const highlight = (context: vscode.ExtensionContext) => {
 		if (!activeEditor) {
 			return;
 		}
+		const fileName = activeEditor.document.fileName || '';
+		wordDictionary.get(fileName)?.clear();
 		const curConfigMap = vscode.workspace.getConfiguration().get('colorful-markdown.fontColorMap') as ColorConfig;
 		if (!isSame(curConfigMap, configMap)) {
 			configMap = curConfigMap;
@@ -74,7 +77,6 @@ export const highlight = (context: vscode.ExtensionContext) => {
 		}
 		const text = activeEditor.document.getText();
 		let match;
-
 		while ((match = colorSyntaxRegExp.exec(text))) {
 			const startPos = activeEditor.document.positionAt(match.index);
 			const endPos = activeEditor.document.positionAt(match.index + match[0].length);
@@ -95,6 +97,7 @@ export const highlight = (context: vscode.ExtensionContext) => {
 				default:
 					style = 'normal';
 			}
+			addToDictionary(`${colorName}${styleVar}${match[3] || ''}`, fileName);
 			decoratorMap[colorName]?.[style].decorationList.push(decoration);
 		}
 		Object.keys(decoratorMap).forEach(e => {
@@ -113,26 +116,33 @@ export const highlight = (context: vscode.ExtensionContext) => {
 			timeout = undefined;
 		}
 		if (throttle) {
-			timeout = setTimeout(updateDecorations, 500);
+			timeout = setTimeout(updateDecorations, 300);
 		} else {
 			updateDecorations();
 		}
 	}
 
 	if (activeEditor) {
-		triggerUpdateDecorations();
+		triggerUpdateDecorations(false);
 	}
 
 	vscode.window.onDidChangeActiveTextEditor(editor => {
 		activeEditor = editor;
 		if (editor) {
-			triggerUpdateDecorations();
+			triggerUpdateDecorations(false);
 		}
 	}, null, context.subscriptions);
 
 	vscode.workspace.onDidChangeTextDocument(event => {
 		if (activeEditor && event.document === activeEditor.document) {
 			triggerUpdateDecorations(true);
+		}
+	}, null, context.subscriptions);
+
+	vscode.workspace.onDidDeleteFiles(event => {
+		const fileName = event.files[0].fsPath;
+		if (wordDictionary.has(fileName)) {
+			wordDictionary.delete(fileName);
 		}
 	}, null, context.subscriptions);
 }
